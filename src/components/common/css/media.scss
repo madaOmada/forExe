@@ -1,0 +1,17 @@
+$size:750;
+$i: $size;
+html{
+  font:{
+    size: 625%;
+    style: normal;
+    family: "Microsoft YaHei",Arial,"SimSun",sans-serif;
+  }
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+@while $i >= 320 {
+  @media screen and (max-width: #{$i}px) {
+    html{font-size: #{$i*625%/$size} !important;}
+  }
+  $i : $i - 5
+}

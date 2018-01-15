@@ -1,0 +1,15 @@
+.idea/
+vendor/
+composer.lock
+package-lock.json
+/node_modules/
+/dist/
+.project
+*.log
+/svg-editor/src/assets/fonts
+.history
+/svg-editor/static/font
+/interaction/dist
+npm-debug.*
+.DS_Store
+robots.txt
