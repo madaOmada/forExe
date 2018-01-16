@@ -3,13 +3,26 @@ const path = require('path');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+var pageIndex=[
+    'first'
+],configEntry={},
+    pluginConfig=[];
+
+pageIndex.forEach(function (item) {
+    configEntry[item] = path.resolve( __dirname , './src/'+ item + '/main.js')
+})
+
+pageIndex.forEach(function (item) {
+    pluginConfig.push(new HtmlWebpackPlugin({
+        filename: 'template/'+item+'/index.html'
+    }))
+})
+
 module.exports = {
-    entry: {
-        test1: path.resolve(__dirname, './src/main.js')
-    },
+    entry: configEntry,
     output: {
         path: path.resolve(__dirname, './dist'),
-        filename: '[name].js'
+        filename: '[name]/main[chunkhash].js'
     },
     module: {
         rules: [
@@ -32,21 +45,13 @@ module.exports = {
                 })
             },
             {
-                test: /\.((woff2?|svg)(\?v=[0-9]\.[0-9]\.[0-9]))|(woff2?|svg|jpe?g|png|gif|ico)$/,
-                //use: [
-                //    {
-                //        loader: 'url-loader',
-                //        options:{
-                //            limit:8192,
-                //            name:'name=img/[name].[hash:8].[ext]',
-                //        }
-                //    }
-                //],
-                loaders: [
-                    //小于10KB的图片会自动转成dataUrl，
-                    'url?limit=10000&name=img/[hash:8].[name].[ext]?[contenthash]',
-                    'image?{bypassOnDebug:true, progressive:true,optimizationLevel:3,pngquant:{quality:"65-80",speed:4}}'
-                ]
+                test: /\.(png|jpe?g|gif)$/,
+                loader: 'url?limit=8192&name=[name]/img/[hash].[ext]',
+                //loaders: [
+                //    //小于10KB的图片会自动转成dataUrl，
+                //    'url?limit=10000&name=img/[hash:8].[name].[ext]',
+                //    'image?{bypassOnDebug:true, progressive:true,optimizationLevel:3,pngquant:{quality:"65-80",speed:4}}'
+                //]
             }
         ]
     },
@@ -56,12 +61,7 @@ module.exports = {
         historyApiFallback: true,//不跳转
         inline: true,//实时刷新
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            title: '测试1',
-            filename: 'index.html',
-            template: path.resolve(__dirname, './src/index.html')
-        }),
+    plugins: pluginConfig.concat([
         new ExtractTextPlugin('css/[name].css?[contenthash]')
-    ]
+    ])
 };
